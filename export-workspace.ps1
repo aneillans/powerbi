@@ -1,4 +1,5 @@
 # This script relies on the PowerBI Commandlets being installed: https://learn.microsoft.com/en-us/powershell/power-bi/overview?view=powerbi-ps
+# If when exporting, you get an error "A task was cancelled", this will be a timeout condition encountered on the API due to the dataset size! 
 
 # Start of variables
 
@@ -22,11 +23,13 @@ $dataflows = Get-PowerBIDataflow -WorkspaceId $workspaceId -Scope Organization
 foreach ($report in $reports) {
     Write-Host "Exporting $($report.Name)"
     $outFile = $outputPath + "\" + $report.Name + ".pbix"
-    Export-PowerBIReport -WorkspaceId $workspaceId -Id $report.Id -OutFile $outFile -Scope Organization
+    # Note: You may find that you need to add -Scope Organization to the following if you get errors; this seems dependant on the version of cmdlets! 
+    Export-PowerBIReport -WorkspaceId $workspaceId -Id $report.Id -OutFile $outFile 
 }
 
 foreach ($flow in $dataflows) {
     Write-Host "Exporting $($flow.Name)"
     $outFile = $outputPath + "\" + $flow.Name + ".json"
-    Export-PowerBIDataflow -WorkspaceId $workspaceId -Id $flow.Id -OutFile $outFile -Scope Organization
+    # Note: You may find that you need to add -Scope Organization to the following if you get errors; this seems dependant on the version of cmdlets! 
+    Export-PowerBIDataflow -WorkspaceId $workspaceId -Id $flow.Id -OutFile $outFile
 }
